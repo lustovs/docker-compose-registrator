@@ -1,11 +1,11 @@
  app:
-   build: nginx 
+   build: nginx
    links:
      - consul
    ports:
      - "80:80"
 
- node:  
+ node:
    build: .
    links:
      - consul
@@ -37,8 +37,4 @@
     - consul
    volumes:
     - "/var/run/docker.sock:/tmp/docker.sock"
-
-
-
-   
 
