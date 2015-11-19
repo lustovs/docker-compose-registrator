@@ -22,7 +22,7 @@
      - "$SSH_AUTH_SOCK:/tmp/ssh_auth_sock"
 
  consul:
-   command: -server -bootstrap -advertise 172.17.42.1
+   command: -server -bootstrap -advertise 192.168.99.100
    image: progrium/consul:latest
    ports:
     - "8300:8300"
@@ -31,7 +31,7 @@
     - "8600:53/udp"
 
  registrator:
-   command: -ip=172.17.42.1 consul://consul:8500
+   command: -ip=192.168.99.100 consul://consul:8500
    image: gliderlabs/registrator:latest
    links:
     - consul
