@@ -10,12 +10,16 @@
    links:
      - consul
    environment:
-       SERVICE_80_NAME: "http"
-       SERVICE_NAME: "app"
-       SERVICE_TAGS: "production"
+       SERVICE_80_NAME: "app"
+       SERVICE_80_TAGS: "production"
+       SERVICE_22_TAGS: "ssh"
+       SERVICE_22_NAME: "access"
    ports:
      - "80"
+     - "22"
 
+   volumes:
+     - "$SSH_AUTH_SOCK:/tmp/ssh_auth_sock"
 
  consul:
    command: -server -bootstrap -advertise 172.17.42.1

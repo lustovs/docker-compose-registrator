@@ -8,8 +8,8 @@ var PORT = 80;
 // App
 var app = express();
 app.get('/', function (req, res) {
-//  res.send('hello World/n');
-  res.send(os.networkInterfaces()); 
+  res.send('hello World/n');
+//  res.send(os.networkInterfaces()); 
 });
 
 app.listen(PORT);

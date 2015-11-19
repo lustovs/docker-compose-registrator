@@ -1,19 +1,34 @@
 # Version: 0.0.1
-FROM centos:centos6
+
+FROM ubuntu:14.04
 MAINTAINER Lustov Stepan <lustovs@gmail.com>
 
-# Enable Extra Packages for Enterprise Linux (EPEL) for CentOS
-RUN     yum install -y epel-release
-# Install Node.js and npm
-RUN     yum install -y nodejs npm
+# Install: Node.js, npm, supervisor
+RUN apt-get update && apt-get install -y nodejs git npm supervisor rsync openssh-server bash
+
+#Make dirs,copy configs
+RUN mkdir -p /var/log/supervisor
+RUN mkdir /var/run/sshd
+RUN echo 'root:screencast' | chpasswd
+RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+COPY supervisor/*.conf /etc/supervisor/conf.d/
+
+
+#SSH login fix. Otherwise user is kicked off after login
+RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+#ENV SSH_AUTH_SOCK=/tmp/ssh_auth_sock
+#RUN git clone git@github.com:lustovs/docker-compose-registrator.git repo
+COPY ./clone.sh /
+#RUN /root/clone.sh
 
 # Install app dependencies
-COPY package.json /src/package.json
+# Bundle app source
+#VOLUME ./src:/src
+COPY ./src /src
 RUN cd /src; npm install
 
-# Bundle app source
-COPY . /src
 
 EXPOSE  80
-CMD ["node", "/src/index.js"]
+EXPOSE  22
+CMD ["/usr/bin/supervisord"]
 
